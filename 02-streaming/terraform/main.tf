@@ -636,12 +636,11 @@ resource "google_dataproc_cluster" "kafka_creation" {
     }
 
     initialization_action {
-    script      = "gs://goog-dataproc-initialization-actions/kafka/kafka.sh"
+    script      = "gs://goog-dataproc-initialization-actions-${local.location}/kafka/kafka.sh"
   }
 
       initialization_action {
-    script      = "gs://goog-dataproc-initialization-actions/kafka/kafka-manager.sh"
-    timeout_sec = 500
+    script      = "gs://goog-dataproc-initialization-actions-${local.location}/kafka/kafka-manager.sh"
   }
 
 
@@ -659,7 +658,7 @@ resource "google_dataproc_cluster" "kafka_creation" {
 
       worker_config {
       num_instances    = 2
-      machine_type  = "n1-standard-1"
+      machine_type  = "n1-standard-2"
      
       disk_config {
         boot_disk_size_gb = 300
@@ -669,8 +668,7 @@ resource "google_dataproc_cluster" "kafka_creation" {
     
     
     software_config {
-      image_version = "2.0"
-      optional_components = ["ANACONDA","JUPYTER","ZOOKEEPER"]
+      optional_components = ["JUPYTER","ZOOKEEPER"]
       
     }
     gce_cluster_config {
@@ -729,7 +727,7 @@ output "SPARK_SERVERLESS_SUBNET" {
 }
 
 output "PERSISTENT_HISTORY_SERVER_NM" {
-  value = local.s8s_spark_sphs_nm
+  value = local.kafka_cluster_nm
 }
 
 output "DPMS_NM" {

@@ -10,5 +10,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-MAX_LOOPS=${1}
-for i in {0..${MAX_LOOPS}}; do echo "${i}:${RANDOM}:False:${RANDOM}"; sleep 0.2; done |    /usr/lib/kafka/bin/kafka-console-producer.sh --broker-list kafka-cluster-w-0:9092 --topic transactions --property "parse.key=true" --property "key.separator=:"  
+for i in {0..100000}
+do
+        bool_arr[0]="false"
+        bool_arr[1]="true"
+        rand=$[$RANDOM % ${#bool_arr[@]}]
+        echo '{"key":'$i'}&{"timestamp" :"'$(date)'" ,"name" : "bitcoin_transaction", "is_coinbase": "'${bool_arr[$rand]}'", "tx_value":"'$i'"}' |    /usr/lib/kafka/bin/kafka-console-producer.sh --broker-list kafka-cluster-w-0:9092 --topic transactions --property "parse.key=true" --property "key.separator=&"  
+        sleep 1
+done
+
+
+
+
+
+
+
+
+
+    
+
