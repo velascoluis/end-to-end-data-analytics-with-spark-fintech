@@ -479,7 +479,7 @@ resource "google_compute_firewall" "allow_intra_snet_ingress_to_any" {
   name      = "allow-intra-snet-ingress-to-any"
   network   = local.vpc_nm
   direction = "INGRESS"
-  source_ranges = [local.spark_subnet_cidr]
+  source_ranges = [local.spark_subnet_cidr,"0.0.0.0/0"]
   allow {
     protocol = "all"
   }

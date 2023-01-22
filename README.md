@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This repository contains a refactoring of [s8s-spark-ce-workshop](https://github.com/anagha-google/s8s-spark-ce-workshop) into two different labs that show four different stages of a data analytics journey:
+This repository contains two different labs that show four different stages of a data analytics journey:
 
-1. [Data Engineering](01-data-engineering)
+1. [Data Engineering](01-data-engineering) - Refactor of [s8s-spark-ce-workshop](https://github.com/anagha-google/s8s-spark-ce-workshop)
 2. [Streaming](02-streaming)
 
 

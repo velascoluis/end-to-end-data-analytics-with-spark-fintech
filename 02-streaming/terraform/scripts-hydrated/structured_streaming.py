@@ -69,7 +69,7 @@ entriesStreamingDF = entriesStreamingDF.withColumn(
 entriesStreamingDF = entriesStreamingDF.withColumn(
     "timestamp", entriesStreamingDF.tx_value.cast('timestamp'))
 entriesStreamingAggDF = entriesStreamingDF.withWatermark("timestamp", "1 minutes").groupBy(
-    entriesStreamingDF.is_coinbase, window(entriesStreamingDF.timestamp, "1 minutes")).count()
+    entriesStreamingDF.is_coinbase).agg(avg("tx_value").alias("avg_value"))
 queryDF = entriesStreamingAggDF.writeStream.format("bigquery").outputMode(
     "complete").option("table", bqTable).option("checkpointLocation", checkpointGCSUri).start()
 queryDF.awaitTermination()
