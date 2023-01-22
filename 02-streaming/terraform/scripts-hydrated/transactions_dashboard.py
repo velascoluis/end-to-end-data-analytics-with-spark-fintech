@@ -12,7 +12,7 @@ def load_data(sql):
 
 st.title('🤷Average value per transaction')
 data_load_state = st.text('Loading data...')
-data = load_data('SELECT * FROM crypto_bitcoin.entries11')
+data = load_data('SELECT * FROM crypto_bitcoin.entries')
 st.dataframe(data)
 data = data.set_index("is_coinbase")
 st.bar_chart(data)

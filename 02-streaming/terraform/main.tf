@@ -554,6 +554,11 @@ resource "google_storage_bucket_object" "scripts_dir_upload_to_gcs" {
   ]
 }
 
+resource "google_bigquery_dataset" "bq_dataset_creation" {
+  dataset_id                  = local.bq_datamart_ds
+  location                    = local.location_multi
+}
+
 
 
 /*******************************************
@@ -591,12 +596,7 @@ resource "google_dataproc_cluster" "kafka_creation" {
     script      = "gs://goog-dataproc-initialization-actions-${local.location}/kafka/kafka.sh"
   }
 
-      initialization_action {
-    script      = "gs://goog-dataproc-initialization-actions-${local.location}/kafka/kafka-manager.sh"
-  }
-
-
-
+  
     staging_bucket = local.s8s_spark_bucket
 
      master_config {
@@ -670,13 +670,6 @@ output "SPARK_SERVERLESS_SUBNET" {
   value = local.spark_subnet_nm
 }
 
-output "PERSISTENT_HISTORY_SERVER_NM" {
-  value = local.kafka_cluster_nm
-}
-
-output "DPMS_NM" {
-  value = local.dpms_nm
-}
 
 output "UMSA_FQN" {
   value = local.umsa_fqn

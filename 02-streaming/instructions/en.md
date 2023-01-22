@@ -14,24 +14,6 @@ The lab includes studying and developing a number of common data engineering tas
 * Development of very simple producer application that generate events <br>
 * Development of a streaming pipeline with windowing aggregates <br>
 
-**_NOTE:_** The code provided in this lab is templatized, you will need to fill the code blocks marked with `INSERT_CODE_HERE` keyword.
-
-For example:
-
-* Show a couple of rows from the table using the `show` function
-* Count the number of rows using the `count` function
-
-```python
-rawChurnDF._______INSERT_CODE_HERE_______(2,vertical=True)
-print(rawChurnDF._______INSERT_CODE_HERE_______)
-```
-Code generated
-
-```python
-rawChurnDF.show(2,vertical=True)
-print(rawChurnDF.count())
-```
-
 
 ## Laboratory execution
 

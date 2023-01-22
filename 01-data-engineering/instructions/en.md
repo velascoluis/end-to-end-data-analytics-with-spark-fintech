@@ -14,29 +14,6 @@ The lab includes studying and developing a number of common data engineering tas
 * Development of common data curation techniques using interactive Spark Serverless from a managed Google Vertex notebook <br>
 * Development of a production data pipeline (DAG) using Cloud Composer, the pipeline will execute Spark in batch mode <br>
 
-**_NOTE:_** The code provided in this lab is templatized, you will need to fill the code blocks marked with `INSERT_CODE_HERE` keyword.
-
-For example:
-
-* Show a couple of rows from the table using the `show` function
-* Count the number of rows using the `count` function
-
-```python
-rawChurnDF._______INSERT_CODE_HERE_______(2,vertical=True)
-print(rawChurnDF._______INSERT_CODE_HERE_______)
-```
-Code generated
-
-```python
-rawChurnDF.show(2,vertical=True)
-print(rawChurnDF.count())
-```
-
-## Setup and Requirements
-
-
-
-
 ## Laboratory execution
 
 ### Introduction
