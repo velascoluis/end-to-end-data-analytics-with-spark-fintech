@@ -29,23 +29,14 @@ umsa_fqn                    = "${local.umsa}@${local.project_id}.iam.gserviceacc
 s8s_spark_bucket            = "s8s-spark-bucket-${local.project_id}"
 s8s_spark_bucket_fqn        = "gs://s8s-spark-${local.project_id}"
 kafka_cluster_nm            = "kafka-cluster"
-s8s_spark_sphs_bucket       = "s8s-sphs-${local.project_id}"
 s8s_spark_sphs_bucket_fqn   = "gs://s8s-sphs-${local.project_id}"
 vpc_nm                      = "s8s-vpc-${local.project_id}"
 spark_subnet_nm             = "spark-snet"
 spark_subnet_cidr           = "10.0.0.0/16"
 psa_ip_length               = 16
-s8s_data_bucket             = "s8s_data_bucket-${local.project_id}"
 s8s_code_bucket             = "s8s_code_bucket-${local.project_id}"
-s8s_artifact_repository_nm  = "s8s-spark-${local.project_id}"
 bq_datamart_ds              = "crypto_bitcoin"
-mnb_server_machine_type     = "n1-standard-4"
-mnb_server_nm               = "s8s-spark-ml-interactive-nb-server"
-CLOUD_COMPOSER2_IMG_VERSION = "composer-2.0.11-airflow-2.2.3"
-SPARK_CONTAINER_IMG_TAG     = "1.0.0"
-dpms_nm                     = "s8s-dpms-${local.project_id}"
 bq_connector_jar_gcs_uri    = "gs://spark-lib/bigquery/spark-bigquery-with-dependencies_2.12-0.22.2.jar"
-cloud_scheduler_timezone    = "America/Chicago"
 is_out_qwiklabs             = true
 }
 
@@ -517,27 +508,7 @@ resource "google_storage_bucket" "s8s_spark_bucket_creation" {
   ]
 }
 
-resource "google_storage_bucket" "s8s_spark_sphs_bucket_creation" {
-  project                           = local.project_id 
-  name                              = local.s8s_spark_sphs_bucket
-  location                          = local.location
-  uniform_bucket_level_access       = true
-  force_destroy                     = true
-  depends_on = [
-      time_sleep.sleep_after_network_and_firewall_creation
-  ]
-}
 
-resource "google_storage_bucket" "s8s_data_bucket_creation" {
-  project                           = local.project_id 
-  name                              = local.s8s_data_bucket
-  location                          = local.location
-  uniform_bucket_level_access       = true
-  force_destroy                     = true
-  depends_on = [
-      time_sleep.sleep_after_network_and_firewall_creation
-  ]
-}
 
 resource "google_storage_bucket" "s8s_code_bucket_creation" {
   project                           = local.project_id 
@@ -560,35 +531,16 @@ dependencies having not completed
 resource "time_sleep" "sleep_after_bucket_creation" {
   create_duration = "60s"
   depends_on = [
-    google_storage_bucket.s8s_data_bucket_creation,
     google_storage_bucket.s8s_code_bucket_creation,
-    google_storage_bucket.s8s_spark_sphs_bucket_creation,
     google_storage_bucket.s8s_spark_bucket_creation
   ]
 }
 
-/******************************************
-Customize scripts and notebooks
- *****************************************/
- # Copy from templates and replace variables
 
-
-resource "null_resource" "mnbs_post_startup_bash_creation" {
-    provisioner "local-exec" {
-        command = "cp ${path.module}/scripts-templates/mnbs-exec-post-startup.sh ${path.module}/scripts-hydrated/ && sed -i s/YOUR_PROJECT_NBR/${local.project_id}/g ${path.module}/scripts-hydrated/mnbs-exec-post-startup.sh"
-    }
-}
-
-resource "null_resource" "data_engineering_notebook_customization" {
-    provisioner "local-exec" {
-        command = "cp ${path.module}/scripts-templates/lab01-data_engineering.ipynb ${path.module}/scripts-hydrated/ && sed -i s/YOUR_PROJECT_NBR/${local.project_id}/g ${path.module}/scripts-hydrated/lab01-data_engineering.ipynb && sed -i s/YOUR_PROJECT_ID/${local.project_id}/g ${path.module}/scripts-hydrated/lab01-data_engineering.ipynb"
-        interpreter = ["bash", "-c"]
-    }
-}
 
 
 /******************************************
-Copy of datasets, scripts and notebooks to buckets
+Copy of datasets, scripts  to buckets
  ******************************************/
 
 
@@ -694,14 +646,6 @@ resource "google_dataproc_cluster" "kafka_creation" {
 
 
 
-
-/*******************************************
-Introducing sleep to minimize errors from
-dependencies having not completed
-********************************************/
-
-
-
 /******************************************
 Output important variables needed for the lab
 ******************************************/
@@ -738,9 +682,6 @@ output "UMSA_FQN" {
   value = local.umsa_fqn
 }
 
-output "DATA_BUCKET" {
-  value = local.s8s_data_bucket
-}
 
 output "CODE_BUCKET" {
   value = local.s8s_code_bucket

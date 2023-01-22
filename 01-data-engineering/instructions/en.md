@@ -80,11 +80,10 @@ In your Google Cloud project, you will find the following list of elements alrea
 * A VPC (`s8s-vpc-<PROJECT_ID>`) + subnet (spark-snet) + firewall rules
 * GCS bucket for data (`gs://s8s_data_bucket-<PROJECT_ID>`)
 * GCS bucket for code (`gs://s8s_code_bucket-<PROJECT_ID>`)
-* Seed data `telco_customer_churn_train_data.csv`
 * A Google managed notebook (`s8s-spark-ml-interactive-nb-server`) with a predefined notebook
 * Persistent History Server (dataproc) (`s8s-sphs-<PROJECT_ID>`)
-* A BigQuery dataset (`customer_churn_ds`)
-* A Container image for SPARK (`gcr.io/<PROJECT_ID>/customer_churn_image`)
+* A BigQuery dataset (`cryptp_bitcoin`) with a sample of the original tables
+* A Container image for SPARK (`gcr.io/<PROJECT_ID>/mining_pool`)
 * A Composer environment (`<PROJECT_ID>-cc2`)
 * A Dataproc metastore (`s8s-dpms-<PROJECT_ID>`)
 
@@ -102,6 +101,8 @@ Follow this sequence:
 ![browse](assets/08.png)
 ![browse](assets/09.png)
 
+Alternatively, you can also create the spark serverless session executing the `create_spark_serverless_session.sh` script
+
 Paste the value:
 
 `spark.jars.packages=com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.25.2`
@@ -118,9 +119,9 @@ Ok, it seems we have now a nice sequence of transformations that can generate a 
 2. Execute: 
 
 ```bash
-$> export PROJECT_ID=`gcloud config list --format "value(core.project)" 2>/dev/null`
+$> export PROJECT_ID=${GOOGLE_CLOUD_PROJECT}
 $> gcloud storage cp gs://s8s_code_bucket-${PROJECT_ID}/setup_dag_files.sh .
-$> ./setup_dag_files.sh
+$> source setup_dag_files.sh
 ```
 This will download the python files that contains the data transformations logic under the following folder:
 
@@ -131,11 +132,11 @@ dataeng
     ├── data_eng_dag_step_2.py
     └── data_eng_pipeline.py
 ```
-NOTE: To showcase a Composer DAG with different steps, the notebook logic has been splitted in 3 different steps
+NOTE: To showcase a Composer DAG with different steps, the notebook logic has been splitted in 2 different steps
 
-Have a look at the `data_eng_dag_step_1.py` and `data_eng_dag_step_2.py`. Those files contains the very same logic you generated on the notebook.
+Have a look at the `data_eng_dag_step_1.py` and `data_eng_dag_step_2.py`. Those files contains the very same logic you generated on the last exercise of the notebook.
 
-The last file, `data_eng_pipeline.py`, contains the DAG logic.
+The last file, `data_eng_pipeline.py`, contains the DAG logic itself.
 
 3. Complete the code blocks on the  `data_eng_pipeline.py` file
 
@@ -145,6 +146,7 @@ The last file, `data_eng_pipeline.py`, contains the DAG logic.
 $> ./dataeng/dag_pipeline/upload_dag.sh
 
 ```
+Wait a few minutes until Composer picks up the new DAG.
 
 4.Trigger DAG execution from Cloud Composer
 It might take a few minutes for Composer to process the new pipeline

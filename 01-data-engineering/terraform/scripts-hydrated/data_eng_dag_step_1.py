@@ -1,8 +1,9 @@
 # ............................................................
 # Preprocessing - Step 1
 # ............................................................
+# This script performs data preprocessing (step 1) from initial data in BigQuery
+# and persists back to BigQuery
 # ............................................................
-
 
 
 import sys
@@ -61,7 +62,7 @@ def fnMain(logger, args):
     displayPrintStatements = args.displayPrintStatements
 
     # 1b. Variables 
-    bqDatasetNm = f"{projectID}.mining_pool_detector"
+    bqDatasetNm = f"{projectID}.crypto_bitcoin"
     appBaseName = "mining-pool-detector"
     appNameSuffix = "preprocessing"
     appName = f"{appBaseName}-{appNameSuffix}"

@@ -22,7 +22,7 @@
 PROJECT_ID=`gcloud config list --format 'value(core.project)'`
 LOCAL_SCRATCH_DIR=~/build
 DOCKER_IMAGE_TAG=$1
-DOCKER_IMAGE_NM="customer_churn_image"
+DOCKER_IMAGE_NM="mining_pool"
 DOCKER_IMAGE_FQN="gcr.io/$PROJECT_ID/$DOCKER_IMAGE_NM:$DOCKER_IMAGE_TAG"
 BQ_CONNECTOR_JAR_URI=$2
 GCP_REGION=$3

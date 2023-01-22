@@ -36,7 +36,7 @@ if [ ! "${CLOUD_SHELL}" = true ]; then
 fi
 
 
-"${GCLOUD_BIN}" beta dataproc sessions create spark sparkhflab01-${RANDOM} --project=${PROJECT_ID} --location=REGION --container-image=gcr.io/s8s-spark-${PROJECT_ID}/customer_churn_image:1.0.0 --history-server-cluster=projects/${PROJECT_ID}/regions/REGION/clusters/s8s-sphs-${PROJECT_ID} --metastore-service=projects/${PROJECT_ID}/locations/REGION/services/s8s-dpms-${PROJECT_ID} --property=spark.jars.packages=com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.25.2 --service-account=s8s-lab-sa@${PROJECT_ID}.iam.gserviceaccount.com --subnet=spark-snet
+"${GCLOUD_BIN}" beta dataproc sessions create spark sparkhflab01-${RANDOM} --project=${PROJECT_ID} --location=REGION --container-image=gcr.io/s8s-spark-${PROJECT_ID}/mining_pool:1.0.0 --history-server-cluster=projects/${PROJECT_ID}/regions/REGION/clusters/s8s-sphs-${PROJECT_ID} --metastore-service=projects/${PROJECT_ID}/locations/REGION/services/s8s-dpms-${PROJECT_ID} --property=spark.jars.packages=com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.25.2 --service-account=s8s-lab-sa@${PROJECT_ID}.iam.gserviceaccount.com --subnet=spark-snet
 
 
 echo "###########################################################################################"

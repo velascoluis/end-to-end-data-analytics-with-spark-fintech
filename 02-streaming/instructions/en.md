@@ -32,8 +32,6 @@ rawChurnDF.show(2,vertical=True)
 print(rawChurnDF.count())
 ```
 
-## Setup and Requirements
-
 
 ## Laboratory execution
 

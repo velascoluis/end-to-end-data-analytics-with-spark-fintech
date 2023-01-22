@@ -676,7 +676,7 @@ resource "google_bigquery_job" "ctas_transactions_creation" {
   job_id     = "ctas_transactions_creation"
 
   query {
-    query =  "CREATE OR REPLACE TABLE crypto_bitcoin.transactions AS SELECT * from [bigquery-public-data.crypto_bitcoin.transactions] TABLESAMPLE SYSTEM (0.01 PERCENT)"
+    query =  "CREATE OR REPLACE TABLE crypto_bitcoin.transactions AS SELECT * from `bigquery-public-data.crypto_bitcoin.transactions` TABLESAMPLE SYSTEM (0.01 PERCENT)"
   }
 
   depends_on = [
@@ -686,10 +686,10 @@ resource "google_bigquery_job" "ctas_transactions_creation" {
 }
 
 resource "google_bigquery_job" "ctas_blocks_creation" {
-  job_id     = "ctas_transactions_creation"
+  job_id     = "ctas_blocks_creation"
 
   query {
-    query =  "CREATE OR REPLACE TABLE crypto_bitcoin.blocks AS SELECT * from [bigquery-public-data.crypto_bitcoin.blocks] TABLESAMPLE SYSTEM (0.01 PERCENT)"
+    query =  "CREATE OR REPLACE TABLE crypto_bitcoin.blocks AS SELECT * from `bigquery-public-data.crypto_bitcoin.blocks` TABLESAMPLE SYSTEM (0.01 PERCENT)"
   }
 
   depends_on = [
@@ -776,7 +776,7 @@ Create Docker Container image for Serverless Spark
 resource "null_resource" "custom_container_image_creation" {
   provisioner "local-exec" {
     interpreter = ["bash", "-exc"]
-    command     = "source /root/google-cloud-sdk/path.bash.inc; chmod +x ${path.module}/scripts-hydrated/build-container-image.sh; ${path.module}/scripts-hydrated/build-container-image.sh ${local.SPARK_CONTAINER_IMG_TAG} ${local.bq_connector_jar_gcs_uri} ${local.location}"
+    command     = "chmod +x ${path.module}/scripts-hydrated/build-container-image.sh; ${path.module}/scripts-hydrated/build-container-image.sh ${local.SPARK_CONTAINER_IMG_TAG} ${local.bq_connector_jar_gcs_uri} ${local.location}"
   
   }
   triggers = {
@@ -844,7 +844,7 @@ resource "google_composer_environment" "cloud_composer_env_creation" {
         AIRFLOW_VAR_REGION = "${local.location}"
         AIRFLOW_VAR_SUBNET = "${local.spark_subnet_nm}"
         AIRFLOW_VAR_PHS_SERVER = "${local.s8s_spark_sphs_nm}"
-        AIRFLOW_VAR_CONTAINER_IMAGE_URI = "gcr.io/${local.project_id}/customer_churn_image:${local.SPARK_CONTAINER_IMG_TAG}"
+        AIRFLOW_VAR_CONTAINER_IMAGE_URI = "gcr.io/${local.project_id}/mining_pool:${local.SPARK_CONTAINER_IMG_TAG}"
         AIRFLOW_VAR_BQ_CONNECTOR_JAR_URI = "${local.bq_connector_jar_gcs_uri}"
         AIRFLOW_VAR_DISPLAY_PRINT_STATEMENTS = "True"
         AIRFLOW_VAR_BQ_DATASET = "${local.bq_datamart_ds}"

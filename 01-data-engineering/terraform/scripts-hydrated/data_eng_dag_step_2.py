@@ -5,10 +5,14 @@
 # and persists to BigQuery
 # ............................................................
 
-import sys,logging,argparse
+import sys
+import logging
+import argparse
 import pyspark
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
+from pyspark.sql.window import Window
+from pyspark.sql import functions as F
 from datetime import datetime
 
 
@@ -55,8 +59,8 @@ def fnMain(logger, args):
     displayPrintStatements = args.displayPrintStatements
 
     # 1b. Variables 
-    bqDatasetNm = f"{projectID}.customer_churn_ds"
-    appBaseName = "customer-churn-model"
+    bqDatasetNm = f"{projectID}.crypto_bitcoin"
+    appBaseName = "mining-pool-detector"
     appNameSuffix = "preprocessing"
     appName = f"{appBaseName}-{appNameSuffix}"
     scratchBucketUri = f"s8s-spark-bucket-{projectNbr}/{appBaseName}/pipelineId-{pipelineID}/{appNameSuffix}"

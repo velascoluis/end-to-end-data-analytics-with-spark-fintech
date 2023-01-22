@@ -113,7 +113,7 @@ with models.DAG(
     start_date=days_ago(2),
     catchup=False,
 ) as scoringDAG:
-    customerChurnDataEngStep1 = DataprocCreateBatchOperator(
+    miningPoolDataEngStep1 = DataprocCreateBatchOperator(
         task_id="Mining-Pool-Class-Data-Eng-Step1",
         project_id=projectID,
         region=region,
@@ -121,7 +121,7 @@ with models.DAG(
         batch_id=f"{batchIDPrefix}-step-1"
     )
 
-    customerChurnDataEngStep2 = DataprocCreateBatchOperator(
+    miningPoolDataEngStep2 = DataprocCreateBatchOperator(
         task_id="Mining-Pool-Class-Data-Eng-Step2",
         project_id=projectID,
         region=region,
@@ -129,8 +129,7 @@ with models.DAG(
         batch_id=f"{batchIDPrefix}-step-2"
     )
 
-    
-    customerChurnDataEngStep1 >> customerChurnDataEngStep2 
+    miningPoolDataEngStep1 >> miningPoolDataEngStep2
 
 
 
