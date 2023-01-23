@@ -15,18 +15,32 @@ Most of the user code is a SPARK refactor of BigQuery SQL code featured [here](h
 
 ## Installation
 
-The deployment is fully terraformed. For each lab and from a [Google Cloud Cloud Shell](https://cloud.google.com/shell) terminal logged as your admin user, execute the following commands:
-
-On the top of the Google Cloud console, ensure an existing project is selected. Then run the following commands:
+The deployment is fully terraformed.
+From a [Google Cloud Cloud Shell](https://cloud.google.com/shell) terminal logged as your admin user, execute the following commands:
+1. Ensure a existing project is selected, you can check with:
 
 ```console
-REGION=us-central1 # Change as needed
-ZONE=us-central1-a # change as needed
+~$ env | grep GOOGLE 
+# e.g. make sure the ENV variable GOOGLE_CLOUD_PROJECT is setup.
 ```
 
+2. Clone this repository:
 
 ```console
-~$ cd <LAB_NAME>
+~$ git clone https://github.com/velascoluis/end-to-end-data-analytics-with-spark-fintech.git
+```
+
+3. Setup variables:
+
+```console
+~$  REGION=<GCP_REGION> 
+~$  ZONE=<GZP_ZONE>
+# e.g. where <GCP_REGION> and <GZP_ZONE> are valid GCP zones
+```
+3. Launch the terraform script to deploy the lab infraestructure:
+
+```console
+~$ cd end-to-end-data-analytics-with-spark-fintech/<LAB_NAME>/terraform
 # e.g. where <LAB_NAME> is 01-data-engineering, 02-sreaming
 ~$ ./local_project_launcher.sh ${GOOGLE_CLOUD_PROJECT} ${REGION} ${ZONE} ${USER_EMAIL}
 ```
@@ -34,12 +48,12 @@ ZONE=us-central1-a # change as needed
 For example:
 
 ```console
-~$ source local_project_launcher.sh ${GOOGLE_CLOUD_PROJECT} ${REGION} ${ZONE} ${USER_EMAIL}
+env | grep GOOGLE
+REGION=us-central1
+ZONE=us-central1-a
+git clone https://github.com/velascoluis/end-to-end-data-analytics-with-spark-fintech.git
+cd end-to-end-data-analytics-with-spark-fintech/01-data-engineering/terraform
+source local_project_launcher.sh ${GOOGLE_CLOUD_PROJECT} ${REGION} ${ZONE} ${USER_EMAIL}
 ```
 
-Then, follow instructions for each lab under `<LAB_NAME>/instructions/en.md` 
-
-
-
-
-
+Then, follow instructions for each lab under `end-to-end-data-analytics-with-spark-fintech/<LAB_NAME>/instructions/README.md` 
