@@ -42,7 +42,7 @@ From a [Google Cloud Cloud Shell](https://cloud.google.com/shell) terminal logge
 ```console
 ~$ cd end-to-end-data-analytics-with-spark-fintech/<LAB_NAME>/terraform
 # e.g. where <LAB_NAME> is 01-data-engineering, 02-sreaming
-~$ ./local_project_launcher.sh ${GOOGLE_CLOUD_PROJECT} ${REGION} ${ZONE} ${USER_EMAIL}
+~$ ./local_project_launcher.sh ${GOOGLE_CLOUD_PROJECT} ${REGION} ${ZONE} ${USER_EMAIL} all
 ```
 
 For example:
@@ -53,7 +53,7 @@ REGION=us-central1
 ZONE=us-central1-a
 git clone https://github.com/velascoluis/end-to-end-data-analytics-with-spark-fintech.git
 cd end-to-end-data-analytics-with-spark-fintech/01-data-engineering/terraform
-source local_project_launcher.sh ${GOOGLE_CLOUD_PROJECT} ${REGION} ${ZONE} ${USER_EMAIL}
+source local_project_launcher.sh ${GOOGLE_CLOUD_PROJECT} ${REGION} ${ZONE} ${USER_EMAIL} all
 ```
 
 Then, follow instructions for each lab under `end-to-end-data-analytics-with-spark-fintech/<LAB_NAME>/instructions/README.md` 
