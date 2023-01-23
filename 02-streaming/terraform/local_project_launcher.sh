@@ -85,7 +85,7 @@ else
     -var="gcp_zone=${GCP_ZONE}" \
     -var="gcp_user_id=${GCP_USER_ID}" \
     --target="${TARGET}" \
-    --auto-approve \
+    --auto-approve 
     if [ ! "${?}" -eq 0 ]; then
         LOG_DATE=`date`
         echo "${LOG_DATE} Unable to run ${TERRAFORM_BIN} apply. Exiting ..."

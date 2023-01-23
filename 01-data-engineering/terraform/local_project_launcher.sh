@@ -84,7 +84,7 @@ else
     -var="gcp_region=${GCP_REGION}" \
     -var="gcp_zone=${GCP_ZONE}" \
     -var="gcp_user_id=${GCP_USER_ID}" \
-    --target="${TARGET}" \
+    --target="${TARGET}" 
     --auto-approve \
     if [ ! "${?}" -eq 0 ]; then
         LOG_DATE=`date`
