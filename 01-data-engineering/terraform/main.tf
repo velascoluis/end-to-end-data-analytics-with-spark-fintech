@@ -672,11 +672,28 @@ resource "google_bigquery_dataset" "bq_dataset_creation" {
   location                    = local.location_multi
 }
 
+resource "google_bigquery_table" "transactions_table" {
+  
+  dataset_id = local.bq_datamart_ds
+  table_id   = "transactions"
+}
+
+resource "google_bigquery_table" "blocks_table" {
+  
+  dataset_id = local.bq_datamart_ds
+  table_id   = "blocks"
+}
+
 resource "google_bigquery_job" "ctas_transactions_creation" {
   job_id     = "ctas_transactions_creation"
 
   query {
-    query =  "CREATE OR REPLACE TABLE crypto_bitcoin.transactions AS SELECT * from `bigquery-public-data.crypto_bitcoin.transactions` TABLESAMPLE SYSTEM (0.01 PERCENT)"
+    query =  "SELECT * from `bigquery-public-data.crypto_bitcoin.transactions` TABLESAMPLE SYSTEM (0.01 PERCENT)"
+    destination_table {
+      project_id = local.project_id
+      dataset_id = local.bq_datamart_ds
+      table_id   = google_bigquery_table.transactions_table.table_id
+    }
   }
 
   depends_on = [
@@ -689,7 +706,12 @@ resource "google_bigquery_job" "ctas_blocks_creation" {
   job_id     = "ctas_blocks_creation"
 
   query {
-    query =  "CREATE OR REPLACE TABLE crypto_bitcoin.blocks AS SELECT * from `bigquery-public-data.crypto_bitcoin.blocks` TABLESAMPLE SYSTEM (0.01 PERCENT)"
+    query =  "SELECT * from `bigquery-public-data.crypto_bitcoin.blocks` TABLESAMPLE SYSTEM (0.01 PERCENT)"
+    destination_table {
+      project_id = local.project_id
+      dataset_id = local.bq_datamart_ds
+      table_id   = google_bigquery_table.blocks_table.table_id
+    }
   }
 
   depends_on = [

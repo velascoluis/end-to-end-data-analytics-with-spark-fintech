@@ -23,9 +23,9 @@ if [ ! "${CLOUD_SHELL}" = true ]; then
     exit ${ERROR_EXIT}
 fi
 
-if [ "${#}" -ne 4 ]; then
+if [ "${#}" -ne 5 ]; then
     echo "Illegal number of parameters. Exiting ..."
-    echo "Usage: ${0} <gcp_project_id> <gcp_region> <gcp_zone> <gcp_user_id>"
+    echo "Usage: ${0} <gcp_project_id> <gcp_region> <gcp_zone> <gcp_user_id> <all|target_resource> " 
     echo "Exiting ..."
      exit ${ERROR_EXIT}
 fi
@@ -35,6 +35,7 @@ GCP_PROJECT_ID=${1}
 GCP_REGION=${2}
 GCP_ZONE=${3}
 GCP_USER_ID=${4}
+TARGET=${5}
 
 LOG_DATE=`date`
 echo "###########################################################################################"
@@ -65,17 +66,35 @@ if [ ! "${?}" -eq 0 ]; then
     exit 1
 fi
 
-"${TERRAFORM_BIN}" apply \
+if [  "${TARGET}" = "all" ]; then
+    "${TERRAFORM_BIN}" apply \
     -var="gcp_project_id=${GCP_PROJECT_ID}" \
     -var="gcp_region=${GCP_REGION}" \
     -var="gcp_zone=${GCP_ZONE}" \
     -var="gcp_user_id=${GCP_USER_ID}" \
-    --auto-approve
-if [ ! "${?}" -eq 0 ]; then
-    LOG_DATE=`date`
-    echo "${LOG_DATE} Unable to run ${TERRAFORM_BIN} apply. Exiting ..."
-    exit 1
-fi   
+    --auto-approve 
+    if [ ! "${?}" -eq 0 ]; then
+        LOG_DATE=`date`
+        echo "${LOG_DATE} Unable to run ${TERRAFORM_BIN} apply. Exiting ..."
+        exit 1
+    fi  
+else
+    "${TERRAFORM_BIN}" apply 
+    -var="gcp_project_id=${GCP_PROJECT_ID}" \
+    -var="gcp_region=${GCP_REGION}" \
+    -var="gcp_zone=${GCP_ZONE}" \
+    -var="gcp_user_id=${GCP_USER_ID}" \
+    --target="${TARGET}" \
+    --auto-approve \
+    if [ ! "${?}" -eq 0 ]; then
+        LOG_DATE=`date`
+        echo "${LOG_DATE} Unable to run ${TERRAFORM_BIN} apply. Exiting ..."
+        exit 1
+    fi  
+
+fi
+
+ 
 LOG_DATE=`date`
 echo "###########################################################################################"
 echo "${LOG_DATE} Execution finished! ..."
