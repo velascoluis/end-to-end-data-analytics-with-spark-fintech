@@ -557,6 +557,9 @@ resource "google_storage_bucket_object" "scripts_dir_upload_to_gcs" {
 resource "google_bigquery_dataset" "bq_dataset_creation" {
   dataset_id                  = local.bq_datamart_ds
   location                    = local.location_multi
+ depends_on = [
+    time_sleep.sleep_after_api_enabling
+  ]
 }
 
 
