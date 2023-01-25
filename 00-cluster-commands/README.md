@@ -9,6 +9,15 @@ ZONE=zone-value-here
 CLUSTER=cluster-name-here
 ```
 
+## Spark job with custom properties
+```
+gcloud dataproc jobs submit spark \
+  --cluster=$CLUSTER \
+  --region=$REGION \
+  --jar=my_jar.jar \
+  --properties='spark.executor.cores=5,spark.executor.memory=4608mb' \
+  -- arg1 arg2
+```
 
 ## Create Auto Scaling Cluster
 
@@ -38,6 +47,7 @@ gcloud dataproc autoscaling-policies import my-auto-scaling-100-secondary-worker
 
 #test creating a cluster with this policy 
 gcloud dataproc clusters create my-auto-scaling-cluster \
+    --enable-component-gateway \
     --autoscaling-policy=my-auto-scaling-100-secondary-workers \
     --project=$PROJECT \
     --region=$REGION
@@ -59,6 +69,47 @@ file:///usr/lib/spark/examples/src/main/python/pi.py \
 
 ```
 
+## Create Custom Constraints (Fleet management)
+### Force enable component gateway for all clusters 
+
+```
+#yaml file for constraint, save as custom.yaml
+name: organizations/ORGANIZATION_ID/customConstraints/custom.dataprocEnableComponentGateway
+resourceTypes:
+- dataproc.googleapis.com/Cluster
+methodTypes:
+    - CREATE
+    - UPDATE
+condition: resource.config.endpointConfig.enableHttpPortAccess==true
+actionType: ALLOW
+displayName: "Enforce enabling Dataproc Component Gateway"
+description: "Only allow Dataproc cluster creation if the Component Gateway is enabled"
+
+#add this as a custom constraint
+gcloud org-policies set-custom-constraint /home/user/custom.yaml
+
+#list constraints
+gcloud org-policies list-custom-constraints --organization=<org-id>
+
+#create policy json file to enable this constraint, save as custom-enable.json
+      name: projects/PROJECT_ID/policies/custom.dataprocEnableComponentGateway
+      spec:
+        rules:
+        - enforce: true
+   
+gcloud org-policies set-policy  /home/user/custom-enable.json
+
+#test a cluster creation for success or failure. 
+gcloud dataproc clusters create test-failure-cluster \
+    --region=$REGION \ 
+    --project=$PROJECT
+
+#test success
+gcloud dataproc clusters create test-failure-cluster \
+    --enable-component-gateway \
+    --region=$REGION \ 
+    --project=$PROJECT
+```
 
 ## PySpark with BQ Connector
 
@@ -69,15 +120,72 @@ gcloud dataproc jobs submit pyspark --region $REGION \
 <your-python-file>.py 
 ```
 
-## Spark job with custom properties
+## Serverless Spark
+### Batches
+
 ```
-gcloud dataproc jobs submit spark \
-  --cluster=$CLUSTER \
-  --region=$REGION \
-  --jar=my_jar.jar \
-  --properties='spark.executor.cores=5,spark.executor.memory=4608mb' \
-  -- arg1 arg2
+Spark Serverless
+------------------
+
+gcloud beta dataproc batches submit spark \
+--project=ravibhatt-ce-sandbox \
+--region=europe-west2 \
+--jars=file:///usr/lib/spark/examples/jars/spark-examples.jar \
+--class=org.apache.spark.examples.SparkPi \
+-- 20000
+
+10 gb shuffle
+----------------
+
+gcloud beta dataproc batches submit spark \
+--project=ravibhatt-ce-sandbox \
+--region=europe-west2 \
+--jar=gs://dataproc-spark-preview/bigshuffle.jar \
+-- shuffle \
+-i gs://dataproc-datasets-us-central1/teragen/100tb/ascii_sort_1GB_input.000000* \
+-o gs://ravimbhatt-demo-outputs/serverless-spark-shuffle/ \
+--output-partitions 20 \
+-v
+
+100 gb shuffle
+----------------
+
+gcloud beta dataproc batches submit spark \
+--project=ravibhatt-ce-sandbox \
+--region=europe-west2 \
+--jar=gs://dataproc-spark-preview/bigshuffle.jar \
+-- shuffle \
+-i gs://dataproc-datasets-us-central1/teragen/100tb/ascii_sort_1GB_input.00000* \
+-o gs://ravimbhatt-demo-outputs/serverless-spark-shuffle/ \
+--output-partitions 20 \
+-v
+
+100 gb shuffle with PHS
+------------------------
+
+gcloud beta dataproc batches submit spark \
+--project=ravibhatt-ce-sandbox \
+--region=europe-west2 \
+--history-server-cluster=projects/ravibhatt-ce-sandbox/regions/europe-west2/clusters/phs-cluster \
+--jar=gs://dataproc-spark-preview/bigshuffle.jar \
+-- shuffle \
+-i gs://dataproc-datasets-us-central1/teragen/100tb/ascii_sort_1GB_input.00000* \
+-o gs://ravimbhatt-demo-outputs/serverless-spark-shuffle/ \
+--output-partitions 20 \
+-v
+
+100 gb shuffle with PHS & Set number of Executors 
+---------------------------------------------------
+
+gcloud beta dataproc batches submit spark \
+--project=ravibhatt-ce-sandbox \
+--region=europe-west2 \
+--history-server-cluster=projects/ravibhatt-ce-sandbox/regions/europe-west2/clusters/phs-cluster \
+--properties='spark.executor.instances=25' \
+--jar=gs://dataproc-spark-preview/bigshuffle.jar \
+-- shuffle \
+-i gs://dataproc-datasets-us-central1/teragen/100tb/ascii_sort_1GB_input.00000* \
+-o gs://ravimbhatt-demo-outputs/serverless-spark-shuffle/ \
+--output-partitions 20 \
+-v
 ```
-
-
-
