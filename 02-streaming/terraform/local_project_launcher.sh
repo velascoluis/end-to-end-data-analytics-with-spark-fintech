@@ -79,7 +79,7 @@ if [  "${TARGET}" = "all" ]; then
         exit 1
     fi  
 else
-    "${TERRAFORM_BIN}" apply 
+    "${TERRAFORM_BIN}" apply \
     -var="gcp_project_id=${GCP_PROJECT_ID}" \
     -var="gcp_region=${GCP_REGION}" \
     -var="gcp_zone=${GCP_ZONE}" \
