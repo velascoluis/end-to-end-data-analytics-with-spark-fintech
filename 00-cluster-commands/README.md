@@ -1,6 +1,6 @@
-#Dataproc cluster commands for common tasks and examples 
+# Dataproc cluster commands for common tasks and examples 
 
-##Set bash variables
+## Set bash variables
 ```
 ACCOUNT=$(gcloud config get account --quiet)
 PROJECT=$(gcloud config get project --quiet)
@@ -10,7 +10,7 @@ CLUSTER=cluster-name-here
 ```
 
 
-##PySpark with BQ Connector
+## PySpark with BQ Connector
 
 ```
 gcloud dataproc jobs submit pyspark --region $REGION \
