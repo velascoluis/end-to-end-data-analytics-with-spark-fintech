@@ -124,12 +124,18 @@ gcloud dataproc jobs submit pyspark --region $REGION \
 ### Batches
 
 ```
+OUTPUT_BUCKET=your-bucket-here
+PHS_CLUSTER=your-cluster-here
+
+gcloud storage buckets create --project=$PROJECT gs://$OUTPUT_BUCKET
+
+
 Spark Serverless
 ------------------
 
 gcloud beta dataproc batches submit spark \
---project=ravibhatt-ce-sandbox \
---region=europe-west2 \
+--project=$PROJECT \
+--region=$REGION \
 --jars=file:///usr/lib/spark/examples/jars/spark-examples.jar \
 --class=org.apache.spark.examples.SparkPi \
 -- 20000
@@ -138,12 +144,12 @@ gcloud beta dataproc batches submit spark \
 ----------------
 
 gcloud beta dataproc batches submit spark \
---project=ravibhatt-ce-sandbox \
---region=europe-west2 \
+--project=$PROJECT \
+--region=$REGION \
 --jar=gs://dataproc-spark-preview/bigshuffle.jar \
 -- shuffle \
 -i gs://dataproc-datasets-us-central1/teragen/100tb/ascii_sort_1GB_input.000000* \
--o gs://ravimbhatt-demo-outputs/serverless-spark-shuffle/ \
+-o gs://$OUTPUT_BUCKET \
 --output-partitions 20 \
 -v
 
@@ -151,12 +157,12 @@ gcloud beta dataproc batches submit spark \
 ----------------
 
 gcloud beta dataproc batches submit spark \
---project=ravibhatt-ce-sandbox \
---region=europe-west2 \
+--project=$PROJECT \
+--region=$REGION \
 --jar=gs://dataproc-spark-preview/bigshuffle.jar \
 -- shuffle \
 -i gs://dataproc-datasets-us-central1/teragen/100tb/ascii_sort_1GB_input.00000* \
--o gs://ravimbhatt-demo-outputs/serverless-spark-shuffle/ \
+-o gs://$OUTPUT_BUCKET \
 --output-partitions 20 \
 -v
 
@@ -164,13 +170,13 @@ gcloud beta dataproc batches submit spark \
 ------------------------
 
 gcloud beta dataproc batches submit spark \
---project=ravibhatt-ce-sandbox \
---region=europe-west2 \
---history-server-cluster=projects/ravibhatt-ce-sandbox/regions/europe-west2/clusters/phs-cluster \
+--project=$PROJECT \
+--region=$REGION \
+--history-server-cluster=projects/$PROJECT/regions/$REGION/clusters/$PHS_CLUSTER \
 --jar=gs://dataproc-spark-preview/bigshuffle.jar \
 -- shuffle \
 -i gs://dataproc-datasets-us-central1/teragen/100tb/ascii_sort_1GB_input.00000* \
--o gs://ravimbhatt-demo-outputs/serverless-spark-shuffle/ \
+-o gs://$OUTPUT_BUCKET \
 --output-partitions 20 \
 -v
 
@@ -178,14 +184,14 @@ gcloud beta dataproc batches submit spark \
 ---------------------------------------------------
 
 gcloud beta dataproc batches submit spark \
---project=ravibhatt-ce-sandbox \
---region=europe-west2 \
---history-server-cluster=projects/ravibhatt-ce-sandbox/regions/europe-west2/clusters/phs-cluster \
+--project=$PROJECT \
+--region=$REGION \
+--history-server-cluster=projects/$PROJECT/regions/$REGION/clusters/$PHS_CLUSTER \
 --properties='spark.executor.instances=25' \
 --jar=gs://dataproc-spark-preview/bigshuffle.jar \
 -- shuffle \
 -i gs://dataproc-datasets-us-central1/teragen/100tb/ascii_sort_1GB_input.00000* \
--o gs://ravimbhatt-demo-outputs/serverless-spark-shuffle/ \
+-o gs://$OUTPUT_BUCKET \
 --output-partitions 20 \
 -v
 ```
